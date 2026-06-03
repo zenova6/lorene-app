@@ -29,7 +29,6 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
 
   body {
@@ -41,7 +40,6 @@
     overflow-x: hidden;
   }
 
-  /* GRID BACKGROUND */
   body::before {
     content: '';
     position: fixed;
@@ -54,7 +52,6 @@
     z-index: 0;
   }
 
-  /* GLOW BLOBS */
   .glow-blob {
     position: absolute;
     border-radius: 50%;
@@ -245,10 +242,88 @@
     background: rgba(124,106,247,0.07);
   }
 
+  /* LIVE STATUS WIDGET */
+  .status-widget {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 0.9rem 1.5rem;
+    margin-top: 2.5rem;
+    animation: fadeUp 0.6s 0.35s ease both;
+    transition: border-color 0.3s;
+  }
+
+  .status-widget.online  { border-color: rgba(52,211,153,0.3); }
+  .status-widget.offline { border-color: rgba(248,113,113,0.3); }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .status-indicator .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--muted);
+    transition: background 0.3s;
+  }
+
+  .status-widget.online  .dot { background: var(--teal); animation: pulse 2s infinite; box-shadow: 0 0 8px var(--teal); }
+  .status-widget.offline .dot { background: var(--red); }
+
+  .status-indicator .label { color: var(--muted); transition: color 0.3s; }
+  .status-widget.online  .label { color: var(--teal); }
+  .status-widget.offline .label { color: var(--red); }
+
+  .status-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--border2);
+  }
+
+  .status-stat {
+    text-align: center;
+  }
+
+  .status-stat-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .status-stat-label {
+    font-size: 0.68rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+  }
+
+  .status-loading .status-stat-val {
+    color: var(--faint);
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  /* HERO STATS */
   .hero-stats {
     display: flex;
     gap: 3rem;
-    margin-top: 4rem;
+    margin-top: 3rem;
     justify-content: center;
     flex-wrap: wrap;
     animation: fadeUp 0.6s 0.4s ease both;
@@ -270,7 +345,7 @@
     letter-spacing: 0.06em;
   }
 
-  /* FEATURES SECTION */
+  /* FEATURES */
   .features {
     padding: 6rem 2rem;
     max-width: 1200px;
@@ -332,21 +407,11 @@
     transition: opacity 0.3s;
   }
 
-  .feature-card:hover {
-    border-color: var(--border2);
-    transform: translateY(-4px);
-    background: var(--card2);
-  }
-
+  .feature-card:hover { border-color: var(--border2); transform: translateY(-4px); background: var(--card2); }
   .feature-card:hover::before { opacity: 1; }
+  .feature-card.big { grid-column: span 2; }
 
-  .feature-card.big {
-    grid-column: span 2;
-  }
-
-  @media (max-width: 700px) {
-    .feature-card.big { grid-column: span 1; }
-  }
+  @media (max-width: 700px) { .feature-card.big { grid-column: span 1; } }
 
   .feature-icon {
     width: 48px; height: 48px;
@@ -364,18 +429,9 @@
     color: var(--text);
   }
 
-  .feature-desc {
-    color: var(--muted);
-    font-size: 0.9rem;
-    line-height: 1.6;
-  }
+  .feature-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
 
-  .feature-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: 1.25rem;
-  }
+  .feature-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.25rem; }
 
   .tag {
     padding: 0.25rem 0.7rem;
@@ -385,7 +441,7 @@
     font-family: 'DM Sans', sans-serif;
   }
 
-  /* COMMANDS SECTION */
+  /* COMMANDS */
   .commands {
     padding: 6rem 2rem;
     background: var(--bg2);
@@ -393,10 +449,7 @@
     border-bottom: 1px solid var(--border);
   }
 
-  .commands-inner {
-    max-width: 1000px;
-    margin: 0 auto;
-  }
+  .commands-inner { max-width: 1000px; margin: 0 auto; }
 
   .cmd-grid {
     display: grid;
@@ -416,11 +469,7 @@
     transition: border-color 0.2s, background 0.2s;
   }
 
-  .cmd-item:hover {
-    border-color: var(--border2);
-    background: var(--card2);
-  }
-
+  .cmd-item:hover { border-color: var(--border2); background: var(--card2); }
   .cmd-emoji { font-size: 1.4rem; line-height: 1; margin-top: 2px; }
 
   .cmd-name {
@@ -431,18 +480,10 @@
     margin-bottom: 2px;
   }
 
-  .cmd-desc {
-    font-size: 0.8rem;
-    color: var(--muted);
-    line-height: 1.4;
-  }
+  .cmd-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
 
-  /* ECONOMY SECTION */
-  .economy {
-    padding: 6rem 2rem;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
+  /* ECONOMY */
+  .economy { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
 
   .economy-showcase {
     display: grid;
@@ -451,9 +492,7 @@
     margin-top: 3rem;
   }
 
-  @media (max-width: 660px) {
-    .economy-showcase { grid-template-columns: 1fr; }
-  }
+  @media (max-width: 660px) { .economy-showcase { grid-template-columns: 1fr; } }
 
   .eco-panel {
     background: var(--card);
@@ -473,10 +512,7 @@
     color: var(--text);
   }
 
-  .eco-panel-title .dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-  }
+  .eco-panel-title .dot { width: 8px; height: 8px; border-radius: 50%; }
 
   .balance-display {
     background: var(--bg3);
@@ -487,26 +523,9 @@
     margin-bottom: 1rem;
   }
 
-  .balance-label {
-    font-size: 0.75rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 4px;
-  }
-
-  .balance-amt {
-    font-family: 'Syne', sans-serif;
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--teal);
-  }
-
-  .balance-sub {
-    font-size: 0.8rem;
-    color: var(--muted);
-    margin-top: 2px;
-  }
+  .balance-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .balance-amt { font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800; color: var(--teal); }
+  .balance-sub { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
 
   .leaderboard-row {
     display: flex;
@@ -518,17 +537,9 @@
   }
 
   .leaderboard-row:last-child { border-bottom: none; }
-
   .lb-left { display: flex; align-items: center; gap: 10px; }
 
-  .lb-rank {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 0.8rem;
-    color: var(--muted);
-    width: 20px;
-  }
-
+  .lb-rank { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem; color: var(--muted); width: 20px; }
   .lb-rank.gold { color: var(--amber); }
   .lb-rank.silver { color: #c0c0c0; }
   .lb-rank.bronze { color: #cd7f32; }
@@ -542,13 +553,7 @@
   }
 
   .lb-name { font-weight: 500; color: var(--text); }
-
-  .lb-amt {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 0.9rem;
-    color: var(--teal);
-  }
+  .lb-amt { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--teal); }
 
   /* STOCK TICKER */
   .stock-ticker-wrap {
@@ -573,37 +578,20 @@
     to { transform: translateX(-50%); }
   }
 
-  .ticker-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.82rem;
-    font-weight: 500;
-  }
-
-  .ticker-sym {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 0.85rem;
-    color: var(--text);
-  }
-
+  .ticker-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; font-weight: 500; }
+  .ticker-sym { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--text); }
   .ticker-price { color: var(--muted); }
-
   .ticker-change { font-weight: 600; }
   .up { color: var(--teal); }
   .down { color: var(--red); }
 
-  /* FISHING SECTION */
+  /* FISHING */
   .fishing {
     padding: 6rem 2rem;
     background: linear-gradient(180deg, var(--bg) 0%, rgba(52,211,153,0.04) 50%, var(--bg) 100%);
   }
 
-  .fishing-inner {
-    max-width: 900px;
-    margin: 0 auto;
-  }
+  .fishing-inner { max-width: 900px; margin: 0 auto; }
 
   .fish-cards {
     display: grid;
@@ -622,48 +610,19 @@
     cursor: default;
   }
 
-  .fish-card:hover {
-    transform: translateY(-5px) rotate(-1deg);
-    border-color: rgba(52,211,153,0.35);
-  }
-
+  .fish-card:hover { transform: translateY(-5px) rotate(-1deg); border-color: rgba(52,211,153,0.35); }
   .fish-emoji { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
-
-  .fish-name {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 3px;
-  }
-
-  .fish-rarity {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    font-weight: 600;
-  }
-
-  .fish-value {
-    font-size: 0.78rem;
-    color: var(--teal);
-    margin-top: 4px;
-    font-weight: 500;
-  }
-
+  .fish-name { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .fish-rarity { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 600; }
+  .fish-value { font-size: 0.78rem; color: var(--teal); margin-top: 4px; font-weight: 500; }
   .rarity-common { color: var(--muted); }
   .rarity-uncommon { color: var(--blue); }
   .rarity-rare { color: var(--accent2); }
   .rarity-epic { color: var(--pink); }
   .rarity-legendary { color: var(--amber); }
 
-  /* INVITE SECTION */
-  .invite {
-    padding: 8rem 2rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
+  /* INVITE */
+  .invite { padding: 8rem 2rem; text-align: center; position: relative; overflow: hidden; }
 
   .invite-card {
     background: var(--card);
@@ -695,20 +654,10 @@
     margin-bottom: 1rem;
   }
 
-  .invite-card p {
-    color: var(--muted);
-    font-size: 1rem;
-    margin-bottom: 2rem;
-    font-weight: 300;
-  }
+  .invite-card p { color: var(--muted); font-size: 1rem; margin-bottom: 2rem; font-weight: 300; }
 
   /* FOOTER */
-  footer {
-    background: var(--bg2);
-    border-top: 1px solid var(--border);
-    padding: 3rem 2rem 2rem;
-    max-width: 100%;
-  }
+  footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 3rem 2rem 2rem; }
 
   .footer-inner {
     max-width: 1100px;
@@ -720,26 +669,10 @@
     gap: 1rem;
   }
 
-  .footer-logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: var(--text);
-  }
+  .footer-logo { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--text); }
 
-  .footer-links {
-    display: flex;
-    gap: 1.5rem;
-    list-style: none;
-  }
-
-  .footer-links a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 0.85rem;
-    transition: color 0.2s;
-  }
-
+  .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
   .footer-links a:hover { color: var(--text); }
 
   .footer-copy {
@@ -764,18 +697,15 @@
     transition: opacity 0.6s ease, transform 0.6s ease;
   }
 
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
 
-  /* RESPONSIVE NAV */
   @media (max-width: 640px) {
     .nav-links { display: none; }
     .hero h1 { font-size: 3rem; }
+    .status-widget { flex-wrap: wrap; justify-content: center; gap: 10px; }
+    .status-divider { display: none; }
   }
 
-  /* SCROLLBAR */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--faint); border-radius: 3px; }
@@ -822,6 +752,29 @@
     </a>
   </div>
 
+  <!-- LIVE STATUS WIDGET -->
+  <div class="status-widget status-loading" id="statusWidget">
+    <div class="status-indicator">
+      <div class="dot"></div>
+      <span class="label" id="statusLabel">Checking...</span>
+    </div>
+    <div class="status-divider"></div>
+    <div class="status-stat">
+      <div class="status-stat-val" id="statusUptime">--</div>
+      <div class="status-stat-label">Uptime</div>
+    </div>
+    <div class="status-divider"></div>
+    <div class="status-stat">
+      <div class="status-stat-val" id="statusServers">--</div>
+      <div class="status-stat-label">Servers</div>
+    </div>
+    <div class="status-divider"></div>
+    <div class="status-stat">
+      <div class="status-stat-val" id="statusPing">--</div>
+      <div class="status-stat-label">Ping</div>
+    </div>
+  </div>
+
   <div class="hero-stats">
     <div class="stat">
       <div class="stat-num">50+</div>
@@ -845,7 +798,6 @@
   <p class="section-sub reveal">Six packed modules — each one built for maximum chaos and community engagement.</p>
 
   <div class="features-grid">
-
     <div class="feature-card reveal" style="--card-accent: #7c6af7;">
       <div class="feature-icon" style="background:rgba(124,106,247,0.15);">🎯</div>
       <div class="feature-title">Trivia &amp; Fun Games</div>
@@ -914,7 +866,6 @@
         <span class="tag" style="background:rgba(167,139,250,0.12);color:#a78bfa;">/meme</span>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -926,118 +877,22 @@
     <p class="section-sub reveal">Type <code style="background:var(--card);padding:2px 7px;border-radius:6px;font-family:monospace;font-size:0.9em;color:var(--accent2);">/</code> in any channel to get started instantly.</p>
 
     <div class="cmd-grid">
-      <div class="cmd-item reveal">
-        <div class="cmd-emoji">🎯</div>
-        <div>
-          <div class="cmd-name">/trivia</div>
-          <div class="cmd-desc">Start a trivia round</div>
-        </div>
-      </div>
-      <div class="cmd-item reveal">
-        <div class="cmd-emoji">🔥</div>
-        <div>
-          <div class="cmd-name">/roast</div>
-          <div class="cmd-desc">Roast a server member</div>
-        </div>
-      </div>
-      <div class="cmd-item reveal">
-        <div class="cmd-emoji">💬</div>
-        <div>
-          <div class="cmd-name">/quote</div>
-          <div class="cmd-desc">Get a random quote</div>
-        </div>
-      </div>
-      <div class="cmd-item reveal">
-        <div class="cmd-emoji">🎣</div>
-        <div>
-          <div class="cmd-name">/fish</div>
-          <div class="cmd-desc">Cast your rod</div>
-        </div>
-      </div>
-      <div class="cmd-item reveal">
-        <div class="cmd-emoji">💰</div>
-        <div>
-          <div class="cmd-name">/balance</div>
-          <div class="cmd-desc">Check your racks</div>
-        </div>
-      </div>
-      <div class="cmd-item reveal">
-        <div class="cmd-emoji">📅</div>
-        <div>
-          <div class="cmd-name">/daily</div>
-          <div class="cmd-desc">Claim daily racks</div>
-        </div>
-      </div>
-      <div class="cmd-item reveal">
-        <div class="cmd-emoji">💼</div>
-        <div>
-          <div class="cmd-name">/work</div>
-          <div class="cmd-desc">Earn racks by working</div>
-        </div>
-      </div>
-      <div class="cmd-item reveal">
-        <div class="cmd-emoji">🎰</div>
-        <div>
-          <div class="cmd-name">/slots</div>
-          <div class="cmd-desc">Spin for big racks</div>
-        </div>
-      </div>
-      <div class="cmd-item reveal">
-        <div class="cmd-emoji">🦹</div>
-        <div>
-          <div class="cmd-name">/heist</div>
-          <div class="cmd-desc">Rob the vault</div>
-        </div>
-      </div>
-      <div class="cmd-item reveal">
-        <div class="cmd-emoji">📊</div>
-        <div>
-          <div class="cmd-name">/leaderboard</div>
-          <div class="cmd-desc">Who's the richest?</div>
-        </div>
-      </div>
-      <div class="cmd-item reveal">
-        <div class="cmd-emoji">📈</div>
-        <div>
-          <div class="cmd-name">/stocks</div>
-          <div class="cmd-desc">View market prices</div>
-        </div>
-      </div>
-      <div class="cmd-item reveal">
-        <div class="cmd-emoji">🧳</div>
-        <div>
-          <div class="cmd-name">/portfolio</div>
-          <div class="cmd-desc">Your stock holdings</div>
-        </div>
-      </div>
-      <div class="cmd-item reveal">
-        <div class="cmd-emoji">🎱</div>
-        <div>
-          <div class="cmd-name">/8ball</div>
-          <div class="cmd-desc">Ask the magic 8-ball</div>
-        </div>
-      </div>
-      <div class="cmd-item reveal">
-        <div class="cmd-emoji">🪙</div>
-        <div>
-          <div class="cmd-name">/flip</div>
-          <div class="cmd-desc">Flip a coin</div>
-        </div>
-      </div>
-      <div class="cmd-item reveal">
-        <div class="cmd-emoji">🎭</div>
-        <div>
-          <div class="cmd-name">/meme</div>
-          <div class="cmd-desc">Get a fresh meme</div>
-        </div>
-      </div>
-      <div class="cmd-item reveal">
-        <div class="cmd-emoji">🤔</div>
-        <div>
-          <div class="cmd-name">/wouldyourather</div>
-          <div class="cmd-desc">Spicy dilemmas</div>
-        </div>
-      </div>
+      <div class="cmd-item reveal"><div class="cmd-emoji">🎯</div><div><div class="cmd-name">/trivia</div><div class="cmd-desc">Start a trivia round</div></div></div>
+      <div class="cmd-item reveal"><div class="cmd-emoji">🔥</div><div><div class="cmd-name">/roast</div><div class="cmd-desc">Roast a server member</div></div></div>
+      <div class="cmd-item reveal"><div class="cmd-emoji">💬</div><div><div class="cmd-name">/quote</div><div class="cmd-desc">Get a random quote</div></div></div>
+      <div class="cmd-item reveal"><div class="cmd-emoji">🎣</div><div><div class="cmd-name">/fish</div><div class="cmd-desc">Cast your rod</div></div></div>
+      <div class="cmd-item reveal"><div class="cmd-emoji">💰</div><div><div class="cmd-name">/balance</div><div class="cmd-desc">Check your racks</div></div></div>
+      <div class="cmd-item reveal"><div class="cmd-emoji">📅</div><div><div class="cmd-name">/daily</div><div class="cmd-desc">Claim daily racks</div></div></div>
+      <div class="cmd-item reveal"><div class="cmd-emoji">💼</div><div><div class="cmd-name">/work</div><div class="cmd-desc">Earn racks by working</div></div></div>
+      <div class="cmd-item reveal"><div class="cmd-emoji">🎰</div><div><div class="cmd-name">/slots</div><div class="cmd-desc">Spin for big racks</div></div></div>
+      <div class="cmd-item reveal"><div class="cmd-emoji">🦹</div><div><div class="cmd-name">/heist</div><div class="cmd-desc">Rob the vault</div></div></div>
+      <div class="cmd-item reveal"><div class="cmd-emoji">📊</div><div><div class="cmd-name">/leaderboard</div><div class="cmd-desc">Who's the richest?</div></div></div>
+      <div class="cmd-item reveal"><div class="cmd-emoji">📈</div><div><div class="cmd-name">/stocks</div><div class="cmd-desc">View market prices</div></div></div>
+      <div class="cmd-item reveal"><div class="cmd-emoji">🧳</div><div><div class="cmd-name">/portfolio</div><div class="cmd-desc">Your stock holdings</div></div></div>
+      <div class="cmd-item reveal"><div class="cmd-emoji">🎱</div><div><div class="cmd-name">/8ball</div><div class="cmd-desc">Ask the magic 8-ball</div></div></div>
+      <div class="cmd-item reveal"><div class="cmd-emoji">🪙</div><div><div class="cmd-name">/flip</div><div class="cmd-desc">Flip a coin</div></div></div>
+      <div class="cmd-item reveal"><div class="cmd-emoji">🎭</div><div><div class="cmd-name">/meme</div><div class="cmd-desc">Get a fresh meme</div></div></div>
+      <div class="cmd-item reveal"><div class="cmd-emoji">🤔</div><div><div class="cmd-name">/wouldyourather</div><div class="cmd-desc">Spicy dilemmas</div></div></div>
     </div>
   </div>
 </section>
@@ -1048,7 +903,6 @@
   <h2 class="section-title reveal">Build your racks empire.</h2>
   <p class="section-sub reveal">Earn, spend, invest, and flex. Lorene's economy is full-featured and always running.</p>
 
-  <!-- STOCK TICKER -->
   <div class="stock-ticker-wrap reveal">
     <div class="stock-ticker">
       <div class="ticker-item"><span class="ticker-sym">DSCRD</span><span class="ticker-price">142.50</span><span class="ticker-change up">+3.2%</span></div>
@@ -1059,7 +913,6 @@
       <div class="ticker-item"><span class="ticker-sym">LORENE</span><span class="ticker-price">999.99</span><span class="ticker-change up">+∞</span></div>
       <div class="ticker-item"><span class="ticker-sym">VIBE</span><span class="ticker-price">55.55</span><span class="ticker-change up">+5.5%</span></div>
       <div class="ticker-item"><span class="ticker-sym">HEIST</span><span class="ticker-price">314.15</span><span class="ticker-change down">-2.1%</span></div>
-      <!-- duplicate for seamless loop -->
       <div class="ticker-item"><span class="ticker-sym">DSCRD</span><span class="ticker-price">142.50</span><span class="ticker-change up">+3.2%</span></div>
       <div class="ticker-item"><span class="ticker-sym">RACKS</span><span class="ticker-price">88.00</span><span class="ticker-change up">+7.4%</span></div>
       <div class="ticker-item"><span class="ticker-sym">FISH</span><span class="ticker-price">22.10</span><span class="ticker-change down">-1.8%</span></div>
@@ -1073,10 +926,7 @@
 
   <div class="economy-showcase reveal">
     <div class="eco-panel">
-      <div class="eco-panel-title">
-        <span class="dot" style="background:var(--teal);"></span>
-        Wallet
-      </div>
+      <div class="eco-panel-title"><span class="dot" style="background:var(--teal);"></span>Wallet</div>
       <div class="balance-display">
         <div class="balance-label">Your Racks</div>
         <div class="balance-amt">🏦 4,820</div>
@@ -1094,48 +944,25 @@
     </div>
 
     <div class="eco-panel">
-      <div class="eco-panel-title">
-        <span class="dot" style="background:var(--amber);"></span>
-        Server Leaderboard
-      </div>
+      <div class="eco-panel-title"><span class="dot" style="background:var(--amber);"></span>Server Leaderboard</div>
       <div class="leaderboard-row">
-        <div class="lb-left">
-          <span class="lb-rank gold">1</span>
-          <div class="lb-avatar" style="background:rgba(251,191,36,0.15);color:var(--amber);">KG</div>
-          <span class="lb-name">KingGrind</span>
-        </div>
+        <div class="lb-left"><span class="lb-rank gold">1</span><div class="lb-avatar" style="background:rgba(251,191,36,0.15);color:var(--amber);">KG</div><span class="lb-name">KingGrind</span></div>
         <span class="lb-amt">28,440</span>
       </div>
       <div class="leaderboard-row">
-        <div class="lb-left">
-          <span class="lb-rank silver">2</span>
-          <div class="lb-avatar" style="background:rgba(192,192,192,0.15);color:#c0c0c0;">RL</div>
-          <span class="lb-name">RackLord</span>
-        </div>
+        <div class="lb-left"><span class="lb-rank silver">2</span><div class="lb-avatar" style="background:rgba(192,192,192,0.15);color:#c0c0c0;">RL</div><span class="lb-name">RackLord</span></div>
         <span class="lb-amt">19,100</span>
       </div>
       <div class="leaderboard-row">
-        <div class="lb-left">
-          <span class="lb-rank bronze">3</span>
-          <div class="lb-avatar" style="background:rgba(205,127,50,0.15);color:#cd7f32;">You</div>
-          <span class="lb-name">You</span>
-        </div>
+        <div class="lb-left"><span class="lb-rank bronze">3</span><div class="lb-avatar" style="background:rgba(205,127,50,0.15);color:#cd7f32;">You</div><span class="lb-name">You</span></div>
         <span class="lb-amt">4,820</span>
       </div>
       <div class="leaderboard-row">
-        <div class="lb-left">
-          <span class="lb-rank" style="color:var(--muted)">4</span>
-          <div class="lb-avatar" style="background:rgba(124,106,247,0.12);color:var(--accent2);">FX</div>
-          <span class="lb-name">FishKing</span>
-        </div>
+        <div class="lb-left"><span class="lb-rank">4</span><div class="lb-avatar" style="background:rgba(124,106,247,0.12);color:var(--accent2);">FX</div><span class="lb-name">FishKing</span></div>
         <span class="lb-amt">3,310</span>
       </div>
       <div class="leaderboard-row">
-        <div class="lb-left">
-          <span class="lb-rank" style="color:var(--muted)">5</span>
-          <div class="lb-avatar" style="background:rgba(244,114,182,0.12);color:var(--pink);">MX</div>
-          <span class="lb-name">Maxxx</span>
-        </div>
+        <div class="lb-left"><span class="lb-rank">5</span><div class="lb-avatar" style="background:rgba(244,114,182,0.12);color:var(--pink);">MX</div><span class="lb-name">Maxxx</span></div>
         <span class="lb-amt">2,050</span>
       </div>
     </div>
@@ -1150,54 +977,14 @@
     <p class="section-sub reveal">Over 20 fish to catch across 5 rarity tiers. Sell your haul for racks or show off your collection.</p>
 
     <div class="fish-cards">
-      <div class="fish-card reveal">
-        <span class="fish-emoji">🐟</span>
-        <div class="fish-name">Sardine</div>
-        <div class="fish-rarity rarity-common">Common</div>
-        <div class="fish-value">+5 racks</div>
-      </div>
-      <div class="fish-card reveal">
-        <span class="fish-emoji">🐡</span>
-        <div class="fish-name">Pufferfish</div>
-        <div class="fish-rarity rarity-uncommon">Uncommon</div>
-        <div class="fish-value">+25 racks</div>
-      </div>
-      <div class="fish-card reveal">
-        <span class="fish-emoji">🐠</span>
-        <div class="fish-name">Clownfish</div>
-        <div class="fish-rarity rarity-uncommon">Uncommon</div>
-        <div class="fish-value">+30 racks</div>
-      </div>
-      <div class="fish-card reveal">
-        <span class="fish-emoji">🦑</span>
-        <div class="fish-name">Giant Squid</div>
-        <div class="fish-rarity rarity-rare">Rare</div>
-        <div class="fish-value">+120 racks</div>
-      </div>
-      <div class="fish-card reveal">
-        <span class="fish-emoji">🦈</span>
-        <div class="fish-name">Shark</div>
-        <div class="fish-rarity rarity-epic">Epic</div>
-        <div class="fish-value">+500 racks</div>
-      </div>
-      <div class="fish-card reveal">
-        <span class="fish-emoji">🐋</span>
-        <div class="fish-name">Blue Whale</div>
-        <div class="fish-rarity rarity-legendary">Legendary</div>
-        <div class="fish-value">+2000 racks</div>
-      </div>
-      <div class="fish-card reveal">
-        <span class="fish-emoji">🦀</span>
-        <div class="fish-name">Red Crab</div>
-        <div class="fish-rarity rarity-common">Common</div>
-        <div class="fish-value">+8 racks</div>
-      </div>
-      <div class="fish-card reveal">
-        <span class="fish-emoji">🐙</span>
-        <div class="fish-name">Octopus</div>
-        <div class="fish-rarity rarity-rare">Rare</div>
-        <div class="fish-value">+150 racks</div>
-      </div>
+      <div class="fish-card reveal"><span class="fish-emoji">🐟</span><div class="fish-name">Sardine</div><div class="fish-rarity rarity-common">Common</div><div class="fish-value">+5 racks</div></div>
+      <div class="fish-card reveal"><span class="fish-emoji">🐡</span><div class="fish-name">Pufferfish</div><div class="fish-rarity rarity-uncommon">Uncommon</div><div class="fish-value">+25 racks</div></div>
+      <div class="fish-card reveal"><span class="fish-emoji">🐠</span><div class="fish-name">Clownfish</div><div class="fish-rarity rarity-uncommon">Uncommon</div><div class="fish-value">+30 racks</div></div>
+      <div class="fish-card reveal"><span class="fish-emoji">🦑</span><div class="fish-name">Giant Squid</div><div class="fish-rarity rarity-rare">Rare</div><div class="fish-value">+120 racks</div></div>
+      <div class="fish-card reveal"><span class="fish-emoji">🦈</span><div class="fish-name">Shark</div><div class="fish-rarity rarity-epic">Epic</div><div class="fish-value">+500 racks</div></div>
+      <div class="fish-card reveal"><span class="fish-emoji">🐋</span><div class="fish-name">Blue Whale</div><div class="fish-rarity rarity-legendary">Legendary</div><div class="fish-value">+2000 racks</div></div>
+      <div class="fish-card reveal"><span class="fish-emoji">🦀</span><div class="fish-name">Red Crab</div><div class="fish-rarity rarity-common">Common</div><div class="fish-value">+8 racks</div></div>
+      <div class="fish-card reveal"><span class="fish-emoji">🐙</span><div class="fish-name">Octopus</div><div class="fish-rarity rarity-rare">Rare</div><div class="fish-value">+150 racks</div></div>
     </div>
 
     <div style="text-align:center;margin-top:2.5rem;">
@@ -1206,7 +993,7 @@
   </div>
 </section>
 
-<!-- INVITE CTA -->
+<!-- INVITE -->
 <section class="invite" id="invite">
   <div class="glow-blob" style="width:600px;height:600px;background:rgba(124,106,247,0.08);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
   <div class="invite-card reveal">
@@ -1218,9 +1005,7 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         Add to Discord
       </a>
-      <a href="https://discord.gg" class="btn-secondary">
-        Join Support Server
-      </a>
+      <a href="https://discord.gg" class="btn-secondary">Join Support Server</a>
     </div>
     <p style="margin-top:1.5rem;font-size:0.78rem;color:var(--faint);">Free forever · No credit card · Works instantly</p>
   </div>
@@ -1241,6 +1026,7 @@
 </footer>
 
 <script>
+  // ── SCROLL REVEAL ──
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
       if (entry.isIntersecting) {
@@ -1251,6 +1037,57 @@
   }, { threshold: 0.12 });
 
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── LIVE BOT STATUS ──
+  function formatUptime(seconds) {
+    const d = Math.floor(seconds / 86400);
+    const h = Math.floor((seconds % 86400) / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    if (d > 0) return `${d}d ${h}h`;
+    if (h > 0) return `${h}h ${m}m`;
+    if (m > 0) return `${m}m ${s}s`;
+    return `${s}s`;
+  }
+
+  async function fetchBotStatus() {
+    const widget   = document.getElementById('statusWidget');
+    const label    = document.getElementById('statusLabel');
+    const uptime   = document.getElementById('statusUptime');
+    const servers  = document.getElementById('statusServers');
+    const ping     = document.getElementById('statusPing');
+
+    try {
+      const res  = await fetch('/api/status');
+      const data = await res.json();
+
+      widget.classList.remove('status-loading', 'online', 'offline');
+
+      if (data.status === 'online') {
+        widget.classList.add('online');
+        label.textContent   = 'Online';
+        uptime.textContent  = formatUptime(data.uptime);
+        servers.textContent = data.servers;
+        ping.textContent    = data.ping + 'ms';
+      } else {
+        widget.classList.add('offline');
+        label.textContent   = 'Offline';
+        uptime.textContent  = '--';
+        servers.textContent = '--';
+        ping.textContent    = '--';
+      }
+    } catch {
+      widget.classList.remove('status-loading');
+      widget.classList.add('offline');
+      label.textContent   = 'Offline';
+      uptime.textContent  = '--';
+      servers.textContent = '--';
+      ping.textContent    = '--';
+    }
+  }
+
+  fetchBotStatus();
+  setInterval(fetchBotStatus, 10000);
 </script>
 </body>
 </html>
