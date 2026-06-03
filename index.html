@@ -1,581 +1,1256 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Idea Saver</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lorene — Your Server's Fun Bot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #18181f;
+    --card: #1c1c25;
+    --card2: #22222d;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --accent: #7c6af7;
+    --accent2: #a78bfa;
+    --pink: #f472b6;
+    --teal: #34d399;
+    --amber: #fbbf24;
+    --red: #f87171;
+    --blue: #60a5fa;
+    --text: #f1f0fa;
+    --muted: #8b89a8;
+    --faint: #3a3a4a;
+  }
 
-    :root {
-      --bg: #0d0d0f;
-      --surface: #16161a;
-      --surface2: #1e1e24;
-      --accent: #f0e040;
-      --accent2: #ff6b35;
-      --text: #f0eff4;
-      --muted: #6e6d78;
-      --border: #2a2a32;
-      --radius: 16px;
-    }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      min-height: 100vh;
-      padding-bottom: 100px;
-    }
+  html { scroll-behavior: smooth; }
 
-    /* HEADER */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(13,13,15,0.92);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-      padding: 18px 20px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
 
-    header h1 {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 1.4rem;
-      letter-spacing: -0.5px;
-    }
+  /* GRID BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(124,106,247,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,106,247,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
 
-    header h1 span { color: var(--accent); }
+  /* GLOW BLOBS */
+  .glow-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+  }
 
-    .idea-count {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.75rem;
-      padding: 4px 10px;
-      border-radius: 99px;
-      font-weight: 500;
-    }
+  section, nav, footer { position: relative; z-index: 1; }
 
-    /* INPUT AREA */
-    .input-section {
-      padding: 20px;
-    }
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(10,10,15,0.8);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
 
-    .input-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      transition: border-color 0.2s;
-    }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: var(--text);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
-    .input-box:focus-within {
-      border-color: var(--accent);
-    }
+  .nav-logo .logo-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
 
-    .tag-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-    }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.85); }
+  }
 
-    .tag-btn {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      border-radius: 99px;
-      padding: 4px 12px;
-      font-size: 0.75rem;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      transition: all 0.15s;
-    }
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
 
-    .tag-btn.active {
-      background: var(--accent);
-      color: #000;
-      border-color: var(--accent);
-      font-weight: 600;
-    }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+    letter-spacing: 0.02em;
+  }
 
-    textarea {
-      width: 100%;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      resize: none;
-      min-height: 90px;
-    }
+  .nav-links a:hover { color: var(--text); }
 
-    textarea::placeholder { color: var(--muted); }
+  .nav-cta {
+    background: var(--accent);
+    color: #fff !important;
+    padding: 0.45rem 1.2rem;
+    border-radius: 100px;
+    font-size: 0.85rem !important;
+    transition: background 0.2s, transform 0.15s !important;
+  }
 
-    .input-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-    }
+  .nav-cta:hover {
+    background: var(--accent2) !important;
+    transform: translateY(-1px);
+    color: #fff !important;
+  }
 
-    .char-count { color: var(--muted); font-size: 0.75rem; }
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    overflow: hidden;
+  }
 
-    .save-btn {
-      background: var(--accent);
-      color: #000;
-      border: none;
-      border-radius: 99px;
-      padding: 8px 20px;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: transform 0.1s, opacity 0.2s;
-      letter-spacing: 0.3px;
-    }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(124,106,247,0.12);
+    border: 1px solid rgba(124,106,247,0.3);
+    border-radius: 100px;
+    padding: 0.35rem 1rem;
+    font-size: 0.8rem;
+    color: var(--accent2);
+    font-weight: 500;
+    margin-bottom: 2rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    animation: fadeUp 0.6s ease both;
+  }
 
-    .save-btn:active { transform: scale(0.95); }
-    .save-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .hero-badge span {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+    animation: pulse 2s ease-in-out infinite;
+  }
 
-    /* FILTER */
-    .filter-row {
-      padding: 0 20px 12px;
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
 
-    .filter-row::-webkit-scrollbar { display: none; }
+  .hero h1 .name-accent {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--pink) 60%, var(--amber) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 
-    .filter-chip {
-      white-space: nowrap;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      border-radius: 99px;
-      padding: 5px 14px;
-      font-size: 0.78rem;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      transition: all 0.15s;
-      flex-shrink: 0;
-    }
+  .hero p {
+    font-size: 1.2rem;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    font-weight: 300;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
 
-    .filter-chip.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #000;
-      font-weight: 600;
-    }
+  .hero-btns {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
 
-    /* SEARCH */
-    .search-wrap {
-      padding: 0 20px 16px;
-      position: relative;
-    }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    padding: 0.8rem 2rem;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 30px rgba(124,106,247,0.35);
+  }
 
-    .search-wrap input {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 99px;
-      padding: 10px 16px 10px 38px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.875rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 40px rgba(124,106,247,0.5);
+  }
 
-    .search-wrap input:focus { border-color: var(--accent); }
-    .search-wrap input::placeholder { color: var(--muted); }
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--text);
+    text-decoration: none;
+    padding: 0.8rem 2rem;
+    border-radius: 100px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border: 1px solid var(--border2);
+    transition: border-color 0.2s, background 0.2s;
+  }
 
-    .search-icon {
-      position: absolute;
-      left: 34px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--muted);
-      font-size: 0.9rem;
-      pointer-events: none;
-    }
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    background: rgba(124,106,247,0.07);
+  }
 
-    /* IDEAS LIST */
-    .ideas-list {
-      padding: 0 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-top: 4rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
 
-    .idea-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      animation: slideIn 0.25s ease;
-      position: relative;
-      overflow: hidden;
-    }
+  .stat { text-align: center; }
 
-    .idea-card::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 3px;
-      border-radius: 3px 0 0 3px;
-    }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text);
+  }
 
-    .idea-card[data-tag="💡 General"]::before { background: var(--accent); }
-    .idea-card[data-tag="🚀 Project"]::before { background: #4ecdc4; }
-    .idea-card[data-tag="🎨 Creative"]::before { background: var(--accent2); }
-    .idea-card[data-tag="📚 Learn"]::before { background: #a78bfa; }
-    .idea-card[data-tag="💼 Work"]::before { background: #34d399; }
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
 
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+  /* FEATURES SECTION */
+  .features {
+    padding: 6rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 
-    .card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 8px;
-    }
+  .section-label {
+    text-align: center;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
 
-    .card-tag {
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--muted);
-      letter-spacing: 0.3px;
-    }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
 
-    .card-actions {
-      display: flex;
-      gap: 8px;
-    }
+  .section-sub {
+    text-align: center;
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 480px;
+    margin: 0 auto 4rem;
+    font-weight: 300;
+  }
 
-    .card-btn {
-      background: none;
-      border: none;
-      color: var(--muted);
-      cursor: pointer;
-      font-size: 0.85rem;
-      padding: 2px 4px;
-      border-radius: 6px;
-      transition: color 0.15s, background 0.15s;
-    }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
 
-    .card-btn:hover { color: var(--text); background: var(--surface2); }
-    .card-btn.delete:hover { color: #ff6b6b; }
-    .card-btn.pin-active { color: var(--accent); }
+  .feature-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    transition: border-color 0.3s, transform 0.3s, background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
 
-    .card-text {
-      font-size: 0.9rem;
-      line-height: 1.6;
-      color: var(--text);
-      word-break: break-word;
-    }
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--card-accent, var(--accent)), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
 
-    .card-text.collapsed {
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
+  .feature-card:hover {
+    border-color: var(--border2);
+    transform: translateY(-4px);
+    background: var(--card2);
+  }
 
-    .expand-btn {
-      background: none;
-      border: none;
-      color: var(--accent);
-      font-size: 0.75rem;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      margin-top: 4px;
-      padding: 0;
-    }
+  .feature-card:hover::before { opacity: 1; }
 
-    .card-date {
-      margin-top: 10px;
-      font-size: 0.7rem;
-      color: var(--muted);
-    }
+  .feature-card.big {
+    grid-column: span 2;
+  }
 
-    /* PINNED SECTION */
-    .section-label {
-      padding: 4px 20px 8px;
-      font-family: 'Syne', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: var(--muted);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
+  @media (max-width: 700px) {
+    .feature-card.big { grid-column: span 1; }
+  }
 
-    /* EMPTY STATE */
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--muted);
-    }
+  .feature-icon {
+    width: 48px; height: 48px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
 
-    .empty-state .emoji { font-size: 3rem; margin-bottom: 12px; }
-    .empty-state p { font-size: 0.9rem; line-height: 1.6; }
+  .feature-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
 
-    /* TOAST */
-    .toast {
-      position: fixed;
-      bottom: 90px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 10px 20px;
-      border-radius: 99px;
-      font-size: 0.82rem;
-      opacity: 0;
-      transition: all 0.25s;
-      pointer-events: none;
-      white-space: nowrap;
-      z-index: 999;
-    }
+  .feature-desc {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
 
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-  </style>
+  .feature-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1.25rem;
+  }
+
+  .tag {
+    padding: 0.25rem 0.7rem;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* COMMANDS SECTION */
+  .commands {
+    padding: 6rem 2rem;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .commands-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .cmd-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+    margin-top: 3rem;
+  }
+
+  .cmd-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .cmd-item:hover {
+    border-color: var(--border2);
+    background: var(--card2);
+  }
+
+  .cmd-emoji { font-size: 1.4rem; line-height: 1; margin-top: 2px; }
+
+  .cmd-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .cmd-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* ECONOMY SECTION */
+  .economy {
+    padding: 6rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .economy-showcase {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 660px) {
+    .economy-showcase { grid-template-columns: 1fr; }
+  }
+
+  .eco-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 1.75rem;
+  }
+
+  .eco-panel-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+  }
+
+  .eco-panel-title .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+
+  .balance-display {
+    background: var(--bg3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    border: 1px solid var(--border);
+    margin-bottom: 1rem;
+  }
+
+  .balance-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+
+  .balance-amt {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--teal);
+  }
+
+  .balance-sub {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .leaderboard-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.88rem;
+  }
+
+  .leaderboard-row:last-child { border-bottom: none; }
+
+  .lb-left { display: flex; align-items: center; gap: 10px; }
+
+  .lb-rank {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: var(--muted);
+    width: 20px;
+  }
+
+  .lb-rank.gold { color: var(--amber); }
+  .lb-rank.silver { color: #c0c0c0; }
+  .lb-rank.bronze { color: #cd7f32; }
+
+  .lb-avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .lb-name { font-weight: 500; color: var(--text); }
+
+  .lb-amt {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--teal);
+  }
+
+  /* STOCK TICKER */
+  .stock-ticker-wrap {
+    overflow: hidden;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 0;
+    margin: 0 -2rem;
+  }
+
+  .stock-ticker {
+    display: flex;
+    gap: 3rem;
+    animation: ticker 30s linear infinite;
+    white-space: nowrap;
+    width: max-content;
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .ticker-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    font-weight: 500;
+  }
+
+  .ticker-sym {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text);
+  }
+
+  .ticker-price { color: var(--muted); }
+
+  .ticker-change { font-weight: 600; }
+  .up { color: var(--teal); }
+  .down { color: var(--red); }
+
+  /* FISHING SECTION */
+  .fishing {
+    padding: 6rem 2rem;
+    background: linear-gradient(180deg, var(--bg) 0%, rgba(52,211,153,0.04) 50%, var(--bg) 100%);
+  }
+
+  .fishing-inner {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .fish-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  .fish-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.25rem 1rem;
+    text-align: center;
+    transition: transform 0.25s, border-color 0.25s;
+    cursor: default;
+  }
+
+  .fish-card:hover {
+    transform: translateY(-5px) rotate(-1deg);
+    border-color: rgba(52,211,153,0.35);
+  }
+
+  .fish-emoji { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
+
+  .fish-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .fish-rarity {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 600;
+  }
+
+  .fish-value {
+    font-size: 0.78rem;
+    color: var(--teal);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  .rarity-common { color: var(--muted); }
+  .rarity-uncommon { color: var(--blue); }
+  .rarity-rare { color: var(--accent2); }
+  .rarity-epic { color: var(--pink); }
+  .rarity-legendary { color: var(--amber); }
+
+  /* INVITE SECTION */
+  .invite {
+    padding: 8rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .invite-card {
+    background: var(--card);
+    border: 1px solid rgba(124,106,247,0.25);
+    border-radius: 28px;
+    padding: 4rem 3rem;
+    max-width: 680px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .invite-card::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%; transform: translateX(-50%);
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(124,106,247,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .invite-card h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  .invite-card p {
+    color: var(--muted);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    font-weight: 300;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 3rem 2rem 2rem;
+    max-width: 100%;
+  }
+
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--text);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+  }
+
+  .footer-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--text); }
+
+  .footer-copy {
+    font-size: 0.8rem;
+    color: var(--faint);
+    width: 100%;
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE NAV */
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .hero h1 { font-size: 3rem; }
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--faint); border-radius: 3px; }
+</style>
 </head>
 <body>
 
-  <header>
-    <h1>Idea<span>Vault</span></h1>
-    <span class="idea-count" id="countBadge">0 ideas</span>
-  </header>
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="logo-dot"></div>
+    Lorene
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#commands">Commands</a></li>
+    <li><a href="#economy">Economy</a></li>
+    <li><a href="#fishing">Fishing</a></li>
+    <li><a href="#invite" class="nav-cta">Add to Server</a></li>
+  </ul>
+</nav>
 
-  <!-- INPUT -->
-  <div class="input-section">
-    <div class="input-box">
-      <div class="tag-row" id="tagRow"></div>
-      <textarea id="ideaInput" placeholder="Drop an idea here..." maxlength="500"></textarea>
-      <div class="input-footer">
-        <span class="char-count"><span id="charCount">0</span>/500</span>
-        <button class="save-btn" id="saveBtn" disabled>Save Idea</button>
+<!-- HERO -->
+<section class="hero">
+  <div class="glow-blob" style="width:500px;height:500px;background:rgba(124,106,247,0.12);top:-100px;left:-100px;"></div>
+  <div class="glow-blob" style="width:400px;height:400px;background:rgba(244,114,182,0.07);bottom:0;right:-80px;"></div>
+
+  <div class="hero-badge">
+    <span></span>
+    Live on Discord
+  </div>
+
+  <h1>Meet <span class="name-accent">Lorene</span><br>Your server's<br>fun bot.</h1>
+  <p>Trivia, roasts, quotes, fishing, economy with racks, fake stocks — all the chaos your server deserves.</p>
+
+  <div class="hero-btns">
+    <a href="#invite" class="btn-primary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      Add Lorene Free
+    </a>
+    <a href="#commands" class="btn-secondary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      View Commands
+    </a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">50+</div>
+      <div class="stat-label">Commands</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">6</div>
+      <div class="stat-label">Feature Modules</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Fun Level</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-label">What Lorene does</div>
+  <h2 class="section-title reveal">Everything your server needs.</h2>
+  <p class="section-sub reveal">Six packed modules — each one built for maximum chaos and community engagement.</p>
+
+  <div class="features-grid">
+
+    <div class="feature-card reveal" style="--card-accent: #7c6af7;">
+      <div class="feature-icon" style="background:rgba(124,106,247,0.15);">🎯</div>
+      <div class="feature-title">Trivia &amp; Fun Games</div>
+      <div class="feature-desc">Challenge your server with trivia questions across dozens of topics. Keep score, build streaks, and crown the smartest person in the chat.</div>
+      <div class="feature-tags">
+        <span class="tag" style="background:rgba(124,106,247,0.12);color:#a78bfa;">/trivia</span>
+        <span class="tag" style="background:rgba(124,106,247,0.12);color:#a78bfa;">/quiz</span>
+        <span class="tag" style="background:rgba(124,106,247,0.12);color:#a78bfa;">/riddle</span>
+      </div>
+    </div>
+
+    <div class="feature-card reveal" style="--card-accent: #f472b6;">
+      <div class="feature-icon" style="background:rgba(244,114,182,0.12);">🔥</div>
+      <div class="feature-title">Roasts &amp; Quotes</div>
+      <div class="feature-desc">Generate savage roasts or drop wisdom bombs with random quotes. Roast your friends, lift your spirits — Lorene's got range.</div>
+      <div class="feature-tags">
+        <span class="tag" style="background:rgba(244,114,182,0.12);color:#f472b6;">/roast</span>
+        <span class="tag" style="background:rgba(244,114,182,0.12);color:#f472b6;">/quote</span>
+        <span class="tag" style="background:rgba(244,114,182,0.12);color:#f472b6;">/compliment</span>
+      </div>
+    </div>
+
+    <div class="feature-card reveal" style="--card-accent: #34d399;">
+      <div class="feature-icon" style="background:rgba(52,211,153,0.12);">🎣</div>
+      <div class="feature-title">Fishing System</div>
+      <div class="feature-desc">Cast your rod, reel in fish of all rarities — from common sardines to legendary sea creatures. Build your collection and sell your catch for racks.</div>
+      <div class="feature-tags">
+        <span class="tag" style="background:rgba(52,211,153,0.12);color:#34d399;">/fish</span>
+        <span class="tag" style="background:rgba(52,211,153,0.12);color:#34d399;">/inventory</span>
+        <span class="tag" style="background:rgba(52,211,153,0.12);color:#34d399;">/sell</span>
+      </div>
+    </div>
+
+    <div class="feature-card big reveal" style="--card-accent: #fbbf24;">
+      <div class="feature-icon" style="background:rgba(251,191,36,0.12);">💰</div>
+      <div class="feature-title">Economy &amp; Racks</div>
+      <div class="feature-desc">A full server economy built around racks — earn them, spend them, gamble them. Daily rewards, work commands, heists, and more. Build your empire or lose it all in the slots. The choice is yours.</div>
+      <div class="feature-tags">
+        <span class="tag" style="background:rgba(251,191,36,0.12);color:#fbbf24;">/balance</span>
+        <span class="tag" style="background:rgba(251,191,36,0.12);color:#fbbf24;">/daily</span>
+        <span class="tag" style="background:rgba(251,191,36,0.12);color:#fbbf24;">/work</span>
+        <span class="tag" style="background:rgba(251,191,36,0.12);color:#fbbf24;">/slots</span>
+        <span class="tag" style="background:rgba(251,191,36,0.12);color:#fbbf24;">/heist</span>
+        <span class="tag" style="background:rgba(251,191,36,0.12);color:#fbbf24;">/leaderboard</span>
+      </div>
+    </div>
+
+    <div class="feature-card reveal" style="--card-accent: #60a5fa;">
+      <div class="feature-icon" style="background:rgba(96,165,250,0.12);">📈</div>
+      <div class="feature-title">Fake Stock Market</div>
+      <div class="feature-desc">Buy and sell fake stocks inside your server. Prices fluctuate in real time. Play the market, short your enemies, become the Wolf of Discord.</div>
+      <div class="feature-tags">
+        <span class="tag" style="background:rgba(96,165,250,0.12);color:#60a5fa;">/buy</span>
+        <span class="tag" style="background:rgba(96,165,250,0.12);color:#60a5fa;">/sell stock</span>
+        <span class="tag" style="background:rgba(96,165,250,0.12);color:#60a5fa;">/portfolio</span>
+      </div>
+    </div>
+
+    <div class="feature-card reveal" style="--card-accent: #a78bfa;">
+      <div class="feature-icon" style="background:rgba(167,139,250,0.12);">🎲</div>
+      <div class="feature-title">More Fun Commands</div>
+      <div class="feature-desc">8ball, coinflip, dice, meme generator, would-you-rather, and a whole bag of commands to keep the chat alive 24/7.</div>
+      <div class="feature-tags">
+        <span class="tag" style="background:rgba(167,139,250,0.12);color:#a78bfa;">/8ball</span>
+        <span class="tag" style="background:rgba(167,139,250,0.12);color:#a78bfa;">/flip</span>
+        <span class="tag" style="background:rgba(167,139,250,0.12);color:#a78bfa;">/meme</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- COMMANDS -->
+<section class="commands" id="commands">
+  <div class="commands-inner">
+    <div class="section-label">All commands</div>
+    <h2 class="section-title reveal">Slash commands, ready to go.</h2>
+    <p class="section-sub reveal">Type <code style="background:var(--card);padding:2px 7px;border-radius:6px;font-family:monospace;font-size:0.9em;color:var(--accent2);">/</code> in any channel to get started instantly.</p>
+
+    <div class="cmd-grid">
+      <div class="cmd-item reveal">
+        <div class="cmd-emoji">🎯</div>
+        <div>
+          <div class="cmd-name">/trivia</div>
+          <div class="cmd-desc">Start a trivia round</div>
+        </div>
+      </div>
+      <div class="cmd-item reveal">
+        <div class="cmd-emoji">🔥</div>
+        <div>
+          <div class="cmd-name">/roast</div>
+          <div class="cmd-desc">Roast a server member</div>
+        </div>
+      </div>
+      <div class="cmd-item reveal">
+        <div class="cmd-emoji">💬</div>
+        <div>
+          <div class="cmd-name">/quote</div>
+          <div class="cmd-desc">Get a random quote</div>
+        </div>
+      </div>
+      <div class="cmd-item reveal">
+        <div class="cmd-emoji">🎣</div>
+        <div>
+          <div class="cmd-name">/fish</div>
+          <div class="cmd-desc">Cast your rod</div>
+        </div>
+      </div>
+      <div class="cmd-item reveal">
+        <div class="cmd-emoji">💰</div>
+        <div>
+          <div class="cmd-name">/balance</div>
+          <div class="cmd-desc">Check your racks</div>
+        </div>
+      </div>
+      <div class="cmd-item reveal">
+        <div class="cmd-emoji">📅</div>
+        <div>
+          <div class="cmd-name">/daily</div>
+          <div class="cmd-desc">Claim daily racks</div>
+        </div>
+      </div>
+      <div class="cmd-item reveal">
+        <div class="cmd-emoji">💼</div>
+        <div>
+          <div class="cmd-name">/work</div>
+          <div class="cmd-desc">Earn racks by working</div>
+        </div>
+      </div>
+      <div class="cmd-item reveal">
+        <div class="cmd-emoji">🎰</div>
+        <div>
+          <div class="cmd-name">/slots</div>
+          <div class="cmd-desc">Spin for big racks</div>
+        </div>
+      </div>
+      <div class="cmd-item reveal">
+        <div class="cmd-emoji">🦹</div>
+        <div>
+          <div class="cmd-name">/heist</div>
+          <div class="cmd-desc">Rob the vault</div>
+        </div>
+      </div>
+      <div class="cmd-item reveal">
+        <div class="cmd-emoji">📊</div>
+        <div>
+          <div class="cmd-name">/leaderboard</div>
+          <div class="cmd-desc">Who's the richest?</div>
+        </div>
+      </div>
+      <div class="cmd-item reveal">
+        <div class="cmd-emoji">📈</div>
+        <div>
+          <div class="cmd-name">/stocks</div>
+          <div class="cmd-desc">View market prices</div>
+        </div>
+      </div>
+      <div class="cmd-item reveal">
+        <div class="cmd-emoji">🧳</div>
+        <div>
+          <div class="cmd-name">/portfolio</div>
+          <div class="cmd-desc">Your stock holdings</div>
+        </div>
+      </div>
+      <div class="cmd-item reveal">
+        <div class="cmd-emoji">🎱</div>
+        <div>
+          <div class="cmd-name">/8ball</div>
+          <div class="cmd-desc">Ask the magic 8-ball</div>
+        </div>
+      </div>
+      <div class="cmd-item reveal">
+        <div class="cmd-emoji">🪙</div>
+        <div>
+          <div class="cmd-name">/flip</div>
+          <div class="cmd-desc">Flip a coin</div>
+        </div>
+      </div>
+      <div class="cmd-item reveal">
+        <div class="cmd-emoji">🎭</div>
+        <div>
+          <div class="cmd-name">/meme</div>
+          <div class="cmd-desc">Get a fresh meme</div>
+        </div>
+      </div>
+      <div class="cmd-item reveal">
+        <div class="cmd-emoji">🤔</div>
+        <div>
+          <div class="cmd-name">/wouldyourather</div>
+          <div class="cmd-desc">Spicy dilemmas</div>
+        </div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- SEARCH -->
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="searchInput" placeholder="Search ideas..." />
+<!-- ECONOMY + STOCKS -->
+<section class="economy" id="economy">
+  <div class="section-label">Economy system</div>
+  <h2 class="section-title reveal">Build your racks empire.</h2>
+  <p class="section-sub reveal">Earn, spend, invest, and flex. Lorene's economy is full-featured and always running.</p>
+
+  <!-- STOCK TICKER -->
+  <div class="stock-ticker-wrap reveal">
+    <div class="stock-ticker">
+      <div class="ticker-item"><span class="ticker-sym">DSCRD</span><span class="ticker-price">142.50</span><span class="ticker-change up">+3.2%</span></div>
+      <div class="ticker-item"><span class="ticker-sym">RACKS</span><span class="ticker-price">88.00</span><span class="ticker-change up">+7.4%</span></div>
+      <div class="ticker-item"><span class="ticker-sym">FISH</span><span class="ticker-price">22.10</span><span class="ticker-change down">-1.8%</span></div>
+      <div class="ticker-item"><span class="ticker-sym">MEME</span><span class="ticker-price">420.69</span><span class="ticker-change up">+69%</span></div>
+      <div class="ticker-item"><span class="ticker-sym">CHAOS</span><span class="ticker-price">9.99</span><span class="ticker-change down">-0.5%</span></div>
+      <div class="ticker-item"><span class="ticker-sym">LORENE</span><span class="ticker-price">999.99</span><span class="ticker-change up">+∞</span></div>
+      <div class="ticker-item"><span class="ticker-sym">VIBE</span><span class="ticker-price">55.55</span><span class="ticker-change up">+5.5%</span></div>
+      <div class="ticker-item"><span class="ticker-sym">HEIST</span><span class="ticker-price">314.15</span><span class="ticker-change down">-2.1%</span></div>
+      <!-- duplicate for seamless loop -->
+      <div class="ticker-item"><span class="ticker-sym">DSCRD</span><span class="ticker-price">142.50</span><span class="ticker-change up">+3.2%</span></div>
+      <div class="ticker-item"><span class="ticker-sym">RACKS</span><span class="ticker-price">88.00</span><span class="ticker-change up">+7.4%</span></div>
+      <div class="ticker-item"><span class="ticker-sym">FISH</span><span class="ticker-price">22.10</span><span class="ticker-change down">-1.8%</span></div>
+      <div class="ticker-item"><span class="ticker-sym">MEME</span><span class="ticker-price">420.69</span><span class="ticker-change up">+69%</span></div>
+      <div class="ticker-item"><span class="ticker-sym">CHAOS</span><span class="ticker-price">9.99</span><span class="ticker-change down">-0.5%</span></div>
+      <div class="ticker-item"><span class="ticker-sym">LORENE</span><span class="ticker-price">999.99</span><span class="ticker-change up">+∞</span></div>
+      <div class="ticker-item"><span class="ticker-sym">VIBE</span><span class="ticker-price">55.55</span><span class="ticker-change up">+5.5%</span></div>
+      <div class="ticker-item"><span class="ticker-sym">HEIST</span><span class="ticker-price">314.15</span><span class="ticker-change down">-2.1%</span></div>
+    </div>
   </div>
 
-  <!-- FILTER -->
-  <div class="filter-row" id="filterRow"></div>
+  <div class="economy-showcase reveal">
+    <div class="eco-panel">
+      <div class="eco-panel-title">
+        <span class="dot" style="background:var(--teal);"></span>
+        Wallet
+      </div>
+      <div class="balance-display">
+        <div class="balance-label">Your Racks</div>
+        <div class="balance-amt">🏦 4,820</div>
+        <div class="balance-sub">Rank #3 in server</div>
+      </div>
+      <div style="font-size:0.82rem;color:var(--muted);display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--border);">
+        <span>Daily streak</span><span style="color:var(--amber);font-weight:600;">🔥 12 days</span>
+      </div>
+      <div style="font-size:0.82rem;color:var(--muted);display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--border);">
+        <span>In stocks</span><span style="color:var(--blue);font-weight:600;">1,200 racks</span>
+      </div>
+      <div style="font-size:0.82rem;color:var(--muted);display:flex;justify-content:space-between;padding:0.5rem 0;">
+        <span>Fish sold</span><span style="color:var(--teal);font-weight:600;">342 fish</span>
+      </div>
+    </div>
 
-  <!-- IDEAS -->
-  <div id="ideasContainer"></div>
-
-  <div class="toast" id="toast"></div>
-
-  <script>
-    const TAGS = ['💡 General','🚀 Project','🎨 Creative','📚 Learn','💼 Work'];
-    let ideas = JSON.parse(localStorage.getItem('ideaVault') || '[]');
-    let selectedTag = TAGS[0];
-    let filterTag = 'All';
-    let searchQuery = '';
-
-    // --- TAG BUTTONS ---
-    const tagRow = document.getElementById('tagRow');
-    TAGS.forEach(tag => {
-      const btn = document.createElement('button');
-      btn.className = 'tag-btn' + (tag === selectedTag ? ' active' : '');
-      btn.textContent = tag;
-      btn.onclick = () => {
-        selectedTag = tag;
-        tagRow.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      };
-      tagRow.appendChild(btn);
-    });
-
-    // --- FILTER CHIPS ---
-    const filterRow = document.getElementById('filterRow');
-    ['All', ...TAGS].forEach(tag => {
-      const chip = document.createElement('button');
-      chip.className = 'filter-chip' + (tag === 'All' ? ' active' : '');
-      chip.textContent = tag;
-      chip.onclick = () => {
-        filterTag = tag;
-        filterRow.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        render();
-      };
-      filterRow.appendChild(chip);
-    });
-
-    // --- INPUT ---
-    const input = document.getElementById('ideaInput');
-    const saveBtn = document.getElementById('saveBtn');
-    const charCount = document.getElementById('charCount');
-
-    input.addEventListener('input', () => {
-      charCount.textContent = input.value.length;
-      saveBtn.disabled = input.value.trim() === '';
-    });
-
-    saveBtn.addEventListener('click', () => {
-      const text = input.value.trim();
-      if (!text) return;
-      const idea = {
-        id: Date.now(),
-        text,
-        tag: selectedTag,
-        pinned: false,
-        date: new Date().toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' })
-      };
-      ideas.unshift(idea);
-      save();
-      input.value = '';
-      charCount.textContent = '0';
-      saveBtn.disabled = true;
-      showToast('✅ Idea saved!');
-      render();
-    });
-
-    // --- SEARCH ---
-    document.getElementById('searchInput').addEventListener('input', e => {
-      searchQuery = e.target.value.toLowerCase();
-      render();
-    });
-
-    // --- SAVE ---
-    function save() {
-      localStorage.setItem('ideaVault', JSON.stringify(ideas));
-    }
-
-    // --- TOAST ---
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2000);
-    }
-
-    // --- RENDER ---
-    function render() {
-      const container = document.getElementById('ideasContainer');
-      container.innerHTML = '';
-
-      let filtered = ideas.filter(i => {
-        const matchTag = filterTag === 'All' || i.tag === filterTag;
-        const matchSearch = i.text.toLowerCase().includes(searchQuery) || i.tag.toLowerCase().includes(searchQuery);
-        return matchTag && matchSearch;
-      });
-
-      document.getElementById('countBadge').textContent = `${ideas.length} idea${ideas.length !== 1 ? 's' : ''}`;
-
-      if (filtered.length === 0) {
-        container.innerHTML = `<div class="empty-state"><div class="emoji">🌌</div><p>No ideas yet.<br>Drop your first one above!</p></div>`;
-        return;
-      }
-
-      const pinned = filtered.filter(i => i.pinned);
-      const rest = filtered.filter(i => !i.pinned);
-
-      if (pinned.length) {
-        const label = document.createElement('div');
-        label.className = 'section-label';
-        label.textContent = '📌 Pinned';
-        container.appendChild(label);
-        pinned.forEach(idea => container.appendChild(makeCard(idea)));
-      }
-
-      if (rest.length) {
-        const label = document.createElement('div');
-        label.className = 'section-label';
-        label.textContent = pinned.length ? 'Recent' : 'All Ideas';
-        container.appendChild(label);
-        rest.forEach(idea => container.appendChild(makeCard(idea)));
-      }
-    }
-
-    function makeCard(idea) {
-      const card = document.createElement('div');
-      card.className = 'idea-card';
-      card.setAttribute('data-tag', idea.tag);
-
-      const isLong = idea.text.length > 160;
-      let expanded = false;
-
-      card.innerHTML = `
-        <div class="card-top">
-          <span class="card-tag">${idea.tag}</span>
-          <div class="card-actions">
-            <button class="card-btn pin-btn ${idea.pinned ? 'pin-active' : ''}" title="Pin">📌</button>
-            <button class="card-btn copy-btn" title="Copy">📋</button>
-            <button class="card-btn delete delete-btn" title="Delete">🗑</button>
-          </div>
+    <div class="eco-panel">
+      <div class="eco-panel-title">
+        <span class="dot" style="background:var(--amber);"></span>
+        Server Leaderboard
+      </div>
+      <div class="leaderboard-row">
+        <div class="lb-left">
+          <span class="lb-rank gold">1</span>
+          <div class="lb-avatar" style="background:rgba(251,191,36,0.15);color:var(--amber);">KG</div>
+          <span class="lb-name">KingGrind</span>
         </div>
-        <div class="card-text ${isLong ? 'collapsed' : ''}">${escHtml(idea.text)}</div>
-        ${isLong ? '<button class="expand-btn">Show more</button>' : ''}
-        <div class="card-date">${idea.date}</div>
-      `;
+        <span class="lb-amt">28,440</span>
+      </div>
+      <div class="leaderboard-row">
+        <div class="lb-left">
+          <span class="lb-rank silver">2</span>
+          <div class="lb-avatar" style="background:rgba(192,192,192,0.15);color:#c0c0c0;">RL</div>
+          <span class="lb-name">RackLord</span>
+        </div>
+        <span class="lb-amt">19,100</span>
+      </div>
+      <div class="leaderboard-row">
+        <div class="lb-left">
+          <span class="lb-rank bronze">3</span>
+          <div class="lb-avatar" style="background:rgba(205,127,50,0.15);color:#cd7f32;">You</div>
+          <span class="lb-name">You</span>
+        </div>
+        <span class="lb-amt">4,820</span>
+      </div>
+      <div class="leaderboard-row">
+        <div class="lb-left">
+          <span class="lb-rank" style="color:var(--muted)">4</span>
+          <div class="lb-avatar" style="background:rgba(124,106,247,0.12);color:var(--accent2);">FX</div>
+          <span class="lb-name">FishKing</span>
+        </div>
+        <span class="lb-amt">3,310</span>
+      </div>
+      <div class="leaderboard-row">
+        <div class="lb-left">
+          <span class="lb-rank" style="color:var(--muted)">5</span>
+          <div class="lb-avatar" style="background:rgba(244,114,182,0.12);color:var(--pink);">MX</div>
+          <span class="lb-name">Maxxx</span>
+        </div>
+        <span class="lb-amt">2,050</span>
+      </div>
+    </div>
+  </div>
+</section>
 
-      // Pin
-      card.querySelector('.pin-btn').onclick = () => {
-        idea.pinned = !idea.pinned;
-        save();
-        showToast(idea.pinned ? '📌 Pinned!' : 'Unpinned');
-        render();
-      };
+<!-- FISHING -->
+<section class="fishing" id="fishing">
+  <div class="fishing-inner">
+    <div class="section-label">Fishing system</div>
+    <h2 class="section-title reveal">Cast your line, reel in riches.</h2>
+    <p class="section-sub reveal">Over 20 fish to catch across 5 rarity tiers. Sell your haul for racks or show off your collection.</p>
 
-      // Copy
-      card.querySelector('.copy-btn').onclick = () => {
-        navigator.clipboard?.writeText(idea.text).then(() => showToast('📋 Copied!'));
-      };
+    <div class="fish-cards">
+      <div class="fish-card reveal">
+        <span class="fish-emoji">🐟</span>
+        <div class="fish-name">Sardine</div>
+        <div class="fish-rarity rarity-common">Common</div>
+        <div class="fish-value">+5 racks</div>
+      </div>
+      <div class="fish-card reveal">
+        <span class="fish-emoji">🐡</span>
+        <div class="fish-name">Pufferfish</div>
+        <div class="fish-rarity rarity-uncommon">Uncommon</div>
+        <div class="fish-value">+25 racks</div>
+      </div>
+      <div class="fish-card reveal">
+        <span class="fish-emoji">🐠</span>
+        <div class="fish-name">Clownfish</div>
+        <div class="fish-rarity rarity-uncommon">Uncommon</div>
+        <div class="fish-value">+30 racks</div>
+      </div>
+      <div class="fish-card reveal">
+        <span class="fish-emoji">🦑</span>
+        <div class="fish-name">Giant Squid</div>
+        <div class="fish-rarity rarity-rare">Rare</div>
+        <div class="fish-value">+120 racks</div>
+      </div>
+      <div class="fish-card reveal">
+        <span class="fish-emoji">🦈</span>
+        <div class="fish-name">Shark</div>
+        <div class="fish-rarity rarity-epic">Epic</div>
+        <div class="fish-value">+500 racks</div>
+      </div>
+      <div class="fish-card reveal">
+        <span class="fish-emoji">🐋</span>
+        <div class="fish-name">Blue Whale</div>
+        <div class="fish-rarity rarity-legendary">Legendary</div>
+        <div class="fish-value">+2000 racks</div>
+      </div>
+      <div class="fish-card reveal">
+        <span class="fish-emoji">🦀</span>
+        <div class="fish-name">Red Crab</div>
+        <div class="fish-rarity rarity-common">Common</div>
+        <div class="fish-value">+8 racks</div>
+      </div>
+      <div class="fish-card reveal">
+        <span class="fish-emoji">🐙</span>
+        <div class="fish-name">Octopus</div>
+        <div class="fish-rarity rarity-rare">Rare</div>
+        <div class="fish-value">+150 racks</div>
+      </div>
+    </div>
 
-      // Delete
-      card.querySelector('.delete-btn').onclick = () => {
-        ideas = ideas.filter(i => i.id !== idea.id);
-        save();
-        showToast('🗑 Deleted');
-        render();
-      };
+    <div style="text-align:center;margin-top:2.5rem;">
+      <p style="color:var(--muted);font-size:0.85rem;">+ 12 more fish to discover. Some only appear at certain times... 👀</p>
+    </div>
+  </div>
+</section>
 
-      // Expand
-      if (isLong) {
-        const expandBtn = card.querySelector('.expand-btn');
-        const textEl = card.querySelector('.card-text');
-        expandBtn.onclick = () => {
-          expanded = !expanded;
-          textEl.classList.toggle('collapsed', !expanded);
-          expandBtn.textContent = expanded ? 'Show less' : 'Show more';
-        };
+<!-- INVITE CTA -->
+<section class="invite" id="invite">
+  <div class="glow-blob" style="width:600px;height:600px;background:rgba(124,106,247,0.08);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+  <div class="invite-card reveal">
+    <div style="font-size:3.5rem;margin-bottom:1rem;">🤖</div>
+    <h2>Ready to add<br><span class="name-accent">Lorene?</span></h2>
+    <p>Free to add. Zero setup. Just pure server fun from minute one.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="#" class="btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Add to Discord
+      </a>
+      <a href="https://discord.gg" class="btn-secondary">
+        Join Support Server
+      </a>
+    </div>
+    <p style="margin-top:1.5rem;font-size:0.78rem;color:var(--faint);">Free forever · No credit card · Works instantly</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">✦ Lorene</div>
+    <ul class="footer-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#commands">Commands</a></li>
+      <li><a href="#invite">Invite</a></li>
+      <li><a href="https://discord.gg">Support</a></li>
+    </ul>
+  </div>
+  <p class="footer-copy">Built with love for your Discord server · Lorene Bot © 2025</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
       }
+    });
+  }, { threshold: 0.12 });
 
-      return card;
-    }
-
-    function escHtml(str) {
-      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-    }
-
-    render();
-  </script>
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
 </body>
 </html>
