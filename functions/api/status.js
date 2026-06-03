@@ -11,9 +11,9 @@ export async function onRequest(context) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 4000);
 
-    const response = await fetch("http://51.75.118.79:20175/status", {
-      signal: controller.signal,
-    });
+    const response = await fetch("https://lorene.vercel.app/api/status", {
+  signal: controller.signal,
+});
     clearTimeout(timeout);
 
     const data = await response.json();
