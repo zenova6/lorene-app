@@ -1195,8 +1195,8 @@ async function fetchStatus() {
   }
 }
 
+// Only initial fetch — no periodic polling
 fetchStatus();
-setInterval(fetchStatus, 10000);
 </script>
 
 </body>
