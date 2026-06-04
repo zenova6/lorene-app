@@ -1,5 +1,3 @@
-// functions/api/status.js
-
 export async function onRequest(context) {
   const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
@@ -8,23 +6,22 @@ export async function onRequest(context) {
   };
 
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 4000);
+    const res = await fetch(
+      "https://tp-db-9ab01-default-rtdb.firebaseio.com/bot-status.json"
+    );
+    const data = await res.json();
 
-    const response = await fetch("https://lorene.vercel.app/api/status", {
-  signal: controller.signal,
-});
-    clearTimeout(timeout);
+    const isStale = Date.now() - data.lastSeen > 60000;
+    if (isStale) throw new Error("stale");
 
-    const data = await response.json();
     return new Response(JSON.stringify(data), {
       status: 200,
       headers: corsHeaders,
     });
-  } catch (err) {
-  return new Response(
-    JSON.stringify({ status: "offline", uptime: 0, servers: 0, ping: 0, error: err.message }),
-    { status: 503, headers: corsHeaders }
-  );
-}
+  } catch {
+    return new Response(
+      JSON.stringify({ status: "offline", uptime: 0, servers: 0, ping: 0 }),
+      { status: 503, headers: corsHeaders }
+    );
+  }
 }
